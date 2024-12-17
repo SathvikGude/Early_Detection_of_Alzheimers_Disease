@@ -1,17 +1,34 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model, Model
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from PIL import Image
 import cv2
 import os
 
-# Load pre-trained MobileNetV2 model
-model = MobileNetV2(weights='imagenet')
+# Load pre-trained MobileNetV2 model without the top layer
+base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
-# Define class labels
+# Add custom layers for Alzheimer’s disease classification (4 classes)
+x = base_model.output
+x = GlobalAveragePooling2D()(x)  # Pool the output of the last convolutional layer
+x = Dense(1024, activation='relu')(x)  # Fully connected layer
+predictions = Dense(4, activation='softmax')(x)  # 4 classes for Alzheimer’s
+
+# Define the new model
+model = Model(inputs=base_model.input, outputs=predictions)
+
+# Freeze the base layers (we're not training MobileNetV2, only the custom top layers)
+for layer in base_model.layers:
+    layer.trainable = False
+
+# Compile the model (optional, based on your use case)
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Define class labels for Alzheimer’s disease
 CLASS_LABELS = ["Non-Demented", "Very Mild Demented", "Mild Demented", "Moderate Demented"]
 
 # Function to preprocess uploaded MRI image
