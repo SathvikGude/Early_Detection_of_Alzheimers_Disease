@@ -7,14 +7,8 @@ from PIL import Image
 import cv2
 import os
 
-# Load the trained Modified MobileNet model
-MODEL_PATH = 'modified_mobilenet_model.h5'  # Update with the correct path to your model file
-
-# Verify model file existence
-if not os.path.exists(MODEL_PATH):
-    st.error("The model file 'modified_mobilenet_model.h5' was not found. Please upload or place the model in the correct location.")
-else:
-    model = load_model(MODEL_PATH)
+# Load the pre-trained MobileNet model
+model = load_model('mobilenet_model.h5')
 
 # Define class labels
 CLASS_LABELS = ["Non-Demented", "Very Mild Demented", "Mild Demented", "Moderate Demented"]
