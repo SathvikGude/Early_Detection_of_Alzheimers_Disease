@@ -54,9 +54,13 @@ def grad_cam(image_array, model, layer_name='Conv_1'):
 
     cam = np.maximum(cam, 0)  # ReLU
     cam = cam / np.max(cam)  # Normalize to [0, 1]
-    cam = cv2.resize(cam.numpy(), (224, 224))
+
+    # Convert to NumPy array before resizing
+    cam = np.array(cam)  # Convert tensor to NumPy array
+    cam = cv2.resize(cam, (224, 224))  # Resize the heatmap
 
     return cam
+
 
 # Overlay Grad-CAM on the original image
 def overlay_grad_cam(original_image, heatmap):
