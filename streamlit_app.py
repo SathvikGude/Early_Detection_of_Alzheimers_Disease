@@ -3,12 +3,13 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.applications import MobileNetV2
 from PIL import Image
 import cv2
 import os
 
-# Load the pre-trained MobileNet model
-model = load_model('mobilenet_model.h5')
+# Load pre-trained MobileNetV2 model
+model = MobileNetV2(weights='imagenet')
 
 # Define class labels
 CLASS_LABELS = ["Non-Demented", "Very Mild Demented", "Mild Demented", "Moderate Demented"]
