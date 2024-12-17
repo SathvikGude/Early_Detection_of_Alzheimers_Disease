@@ -5,11 +5,16 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import cv2
-import matplotlib.pyplot as plt
+import os
 
 # Load the trained Modified MobileNet model
-MODEL_PATH = 'modified_mobilenet_model.h5'  # Path to your trained model
-model = load_model(MODEL_PATH)
+MODEL_PATH = 'modified_mobilenet_model.h5'  # Update with the correct path to your model file
+
+# Verify model file existence
+if not os.path.exists(MODEL_PATH):
+    st.error("The model file 'modified_mobilenet_model.h5' was not found. Please upload or place the model in the correct location.")
+else:
+    model = load_model(MODEL_PATH)
 
 # Define class labels
 CLASS_LABELS = ["Non-Demented", "Very Mild Demented", "Mild Demented", "Moderate Demented"]
